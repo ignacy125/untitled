@@ -4,35 +4,46 @@ import (
 	"net/http"
 
 	"fmt"
+	"time"
+	"strings"
 )
+var login string
 //TODO tutaj też zmien na response i request
-func witam(wysylacz http.ResponseWriter, pytanie *http.Request) {
+func witam(response http.ResponseWriter, request *http.Request) {
 	fmt.Println("Witam na mojej stronie")
-	http.ServeFile(wysylacz, pytanie, "logowanie.html")
+	http.ServeFile(response, request, "logowanie.html")
 
 }
 func logowanie(response http.ResponseWriter, request *http.Request) {
-	if(request.Method == "POST") {
-		//TODO Zapisz login i haslo do zmiennych np: login := pytanie.Form["login"] i nie wyswietlaj na konsoli hasla
-		//TODO nie zapisałeś hasła i loginu do zmiennych, a hasło nadal jest wyświetlana na konsoli
+	if (request.Method == "POST") {
+		var correctPassword string
 		request.ParseForm()
 		fmt.Println("login", request.Form["login"])
-		fmt.Println("pass", request.Form["pass"])
-		//TODO tak jak pisałem w smsie, brakuje operatora przypisania ":="
-		var correctPassword = 12345
-		var correctLogin = "aziron"
+		//fmt.Println("pass", request.Form["pass"])
 
-		if //TODO tego if'a możesz zakomentować jeśli nie wiesz jak go dokończyć
-		//TODO Stworz zmienne correctPassword i correctLogin,
-		//TODO Przypisz im wartosci ktore sobie wymyslisz aby za ich pomoca mozna bylo sie zalogowac na strone
-		//TODO Za pomoca warunku if sprawdz czy podany w formularzu login i haslo pasuja do correctPassword itd...
-		//TODO przyklad warunku if: https://gobyexample.com/if-else
-		//TODO login moze byc caseInsensitive, czyli "aziron" to to samo co "Aziron" (wielkosc liter nie ma znaczenia)
-		//TODO Do tego sluzy metoda EqualFold w klasie strings. Przykład użycia takiej metody jest ponizej
-		//TODO http://stackoverflow.com/questions/30196780/case-insensitive-string-comparison-in-go
-		//TODO Po poprawnym zalogowaniu przekieruj uzytkownika na strone /internal (pamietaj ze najpierw musisz ja utworzyc)
-		//TODO Przekierowanie robi sie tak: http.Redirect(response, request, "/sciezka_do_strony_internal", 302)
-		//TODO jesli haslo lub login sa niepoprawne przekieruj uzytkownika na strone /logowanie
+		correctPassword = "12345"
+		correctLogin := "aziron"
+
+		login = request.Form["login"][0]
+		haslo := request.Form["pass"][0]
+
+		if strings.EqualFold(login, correctLogin) {
+			if haslo == correctPassword {
+				http.Redirect(response, request, "/internal", 302)
+
+			} else {
+				fmt.Println("Niepoprawne hasło")
+				time.Sleep(2)
+				http.Redirect(response, request, "/invalid_login", 302)
+			}
+
+		} else {
+			fmt.Println("Niepoprawne login")
+			time.Sleep(2)
+			http.Redirect(response, request, "/invalid_login", 302)
+
+		}
+
 
 	}
 	fmt.Println("Witam na mojej stronie")
@@ -40,30 +51,25 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 	http.ServeFile(response, request, "logowanie.html")
 
 }
-//TODO tutaj też zmien na response i request
-func internalHander(wysylacz http.ResponseWriter, pytanie *http.Request) {
+func internalHandler(response http.ResponseWriter, request *http.Request) {
 	fmt.Println("Witam na mojej stronie 2")
-	http.ServeFile(wysylacz, pytanie, "internal")
-
-
-
+	//http.ServeFile(wysylacz, pytanie, "internal")
+	fmt.Fprintf(response, "Witaj %s", login)
+}
+func invalidLogin(response http.ResponseWriter, request *http.Request) {
+	http.ServeFile(response, request, "invalid_login.html")
 
 }
-func main(){
+
+
+func main() {
 	http.HandleFunc("/", witam)
 
-	//TODO mozesz skorzystac z http.ServeFile tak jak w funkcji "witam"
 	http.HandleFunc("/logowanie", logowanie)
-	http.HandleFunc("/internal") //TODO brakuje wywołania funkcji "internalHandler", która ma obsłużyć nową stronę, tak jak wyżej "logowanie"
+	http.HandleFunc("/invalid_login", invalidLogin)
+	http.HandleFunc("/internal", internalHandler)
 	err := http.ListenAndServe("localhost:5555", nil)
-	if(err != nil){
-		//TODO Dobrze, ale println teraz nie wyswietli tego błędu, bo używasz starej nazwy zmiennej
-		println(error)
+	if (err != nil) {
+		println(err)
 	}
 }
-
-
-//TODO Jesli masz jakies pytanie albo czegos nie wiesz, napisz maila do mnie. Czas na wykonanie zadania do czwartku do 20:00
-//TODO Po skonczonej pracy w danym dniu uzyj gita CTRL + k i wrzuc zmiany na githuba
-
-//TODO ogólnie fajnie że dużo zrobiłeś, ale zostawiłeś kod w stanie w którym się nie kompiluje. Lepiej zakomentować te fragmenty :)
