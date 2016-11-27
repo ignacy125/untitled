@@ -1,3 +1,4 @@
+{{define "internal"}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +6,8 @@
     <title>Title</title>
 </head>
 <body>
-Witaj,
+<p>Witaj {{.Title}}</p>
+{{template "login_form" .}}
 </body>
 </html>
+{{end}}
