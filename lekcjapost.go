@@ -11,9 +11,16 @@ import (
 )
 
 var login string
+var correctLogin string = "aziron"
+type User struct{
+	Name string
+	Login string
+}
+
 type Page struct{
 	Title string
 	Body []byte
+	User User
 }
 func loadPage(title string) *Page {
 	filename := title + ".txt"
@@ -23,9 +30,14 @@ func loadPage(title string) *Page {
 //TODO tutaj też zmien na response i request
 func witam(response http.ResponseWriter, request *http.Request) {
 	request.ParseForm()
-	fmt.Println("Witam na mojej stronie", request.URL.Path[1:])
-	http.ServeFile(response, request, "logowanie.html")
-
+	path:= request.URL.Path
+	if path != "/" {
+		defaultHandler(response, request)
+	} else {
+		fmt.Println("Witam na mojej stronie", path)
+		page:= Page{Title: "welcome"}
+		getTemplate(response, request, page, "welcome")
+	}
 }
 
 func logowanie(response http.ResponseWriter, request *http.Request) {
@@ -37,7 +49,6 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 		//fmt.Println("pass", request.Form["pass"])
 
 		correctPassword = "12345"
-		correctLogin := "aziron"
 
 		login = request.Form["login"][0]
 		haslo := request.Form["pass"][0]
@@ -69,28 +80,43 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 
 }
 func internalHandler(response http.ResponseWriter, request *http.Request) {
-	fmt.Println("Witam na mojej stronie 3")
-	//http.ServeFile(wysylacz, pytanie, "internal")
-	//p := "aziron"
-	title := "aziron"
-	//body :=[]byte{0}
-	//p := loadPage("logowanie")
-	p:= Page{Title: title}
-	t := template.Must(template.ParseFiles("internal.html", "logowanie.html"))
-	t.ExecuteTemplate(response, "internal", p)
-	//t.Execute(response, p)
-	//fmt.Fprintf(response, "Witaj %s", login)
+	title := "internal"
+	if login == correctLogin {
+		user:= User{"Ernest", login}
+		page:= Page{Title: title, User: user}
+		getTemplate(response, request, page, "internal")
+	} else{
+		page:= Page{Title: title}
+		getTemplate(response, request, page, "welcome")
+	}
 }
 func invalidLogin(response http.ResponseWriter, request *http.Request) {
 	http.ServeFile(response, request, "invalid_login.html")
+}
 
+func logoutHandler(response http.ResponseWriter, request *http.Request) {
+	login = ""
+	internalHandler(response, request)
+}
+
+func defaultHandler(response http.ResponseWriter, request *http.Request) {
+	title := request.URL.Path
+	page:= Page{Title: title}
+	getTemplate(response, request, page, "default")
+}
+
+func getTemplate(response http.ResponseWriter, request *http.Request, page Page, tmpl string){
+	request.ParseForm()
+	t := template.Must(template.ParseGlob("templates/*"))
+	t.ExecuteTemplate(response, tmpl, page)
 }
 
 
 func main() {
 	http.HandleFunc("/", witam)
-
+	http.HandleFunc("/default", defaultHandler)
 	http.HandleFunc("/logowanie", logowanie)
+	http.HandleFunc("/logout", logoutHandler)
 	http.HandleFunc("/favicon.ico", func (w http.ResponseWriter, r *http.Request){})
 	http.HandleFunc("/invalid_login", invalidLogin)
 	http.HandleFunc("/internal", internalHandler)

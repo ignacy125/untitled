@@ -1,0 +1,7 @@
+{{define "internal"}}
+{{template "header" .}}
+<p>Witaj {{.User.Name}} </p>
+<p>Zalogowałeś się jako {{.User.Login}}</p>
+{{template "logout_form" .}}
+{{template "footer" .}}
+{{end}}
