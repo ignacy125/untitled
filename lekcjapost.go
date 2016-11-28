@@ -1,4 +1,7 @@
 package main
+//TODO Stwórz nowy folder w katalogu projektu o nazwie /templates, będą w nim trzymane szablony stron internetowych
+//TODO w tym katalogu stwórz pliki html o nazwach "header", "footer", "loginForm", "logoutForm" "internal", "default", "welcome"
+//TODO na lekcji będziemy korzystać z tych plików
 
 import (
 	"net/http"
@@ -8,9 +11,14 @@ import (
 	"strings"
 )
 var login string
-//TODO tutaj też zmien na response i request
+
 func witam(response http.ResponseWriter, request *http.Request) {
 	fmt.Println("Witam na mojej stronie")
+	//TODO zauważyłeś że komunikat się wyświetla w konsoli 2 razy? Nie wiesz dlaczego tak jest?
+	//TODO wyświetl na konsoli oprócz standardowego powitania wartość request.URL.Path.
+	//TODO żeby to zrobić, musisz najpierw użyć request.ParseForm()
+	//TODO Czy te 2 uruchomienia są faktycznie takie same? Jeśli nie, to w funkcji main stwórz taki HandleFunc()
+	//TODO żeby nie wyświetlać 2 razy komunikatu powitalnego na konsoli
 	http.ServeFile(response, request, "logowanie.html")
 
 }
@@ -26,7 +34,9 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 
 		login = request.Form["login"][0]
 		haslo := request.Form["pass"][0]
-
+		//TODO popraw warunek sprawdzania poprawności loginu i hasła tak, aby wszystko mieściło się w
+		//TODO jednej instrukcji if{} else{} W przykładzie poniżej drugi "if" pokazuje jak to zrobić"
+		//TODO Przykład: https://www.quora.com/What-is-the-difference-between-using-and-in-golang-IF-statements
 		if strings.EqualFold(login, correctLogin) {
 			if haslo == correctPassword {
 				http.Redirect(response, request, "/internal", 302)
@@ -63,8 +73,10 @@ func invalidLogin(response http.ResponseWriter, request *http.Request) {
 
 
 func main() {
+	//TODO do każdego szablonu stworzonego w folderze /template stwórz HandleFunc() oraz metode,
+	//TODO która będzie ją obsługiwać tak jak "witam", "logowanie" "invalidLogin" itd... Niech każda metoda
+	//TODO kończy się w nazwie słowem Handler
 	http.HandleFunc("/", witam)
-
 	http.HandleFunc("/logowanie", logowanie)
 	http.HandleFunc("/invalid_login", invalidLogin)
 	http.HandleFunc("/internal", internalHandler)
@@ -73,3 +85,6 @@ func main() {
 		println(err)
 	}
 }
+
+// Na zrobienie zadań masz czas do czwartku do 20:30. W razie pytań pisz maila,
+// pamiętaj o stworzeniu brancha jeśli zamierzasz robić commit kodu, który się nie kompiluje
