@@ -13,7 +13,8 @@ import (
 var login string
 
 func witam(response http.ResponseWriter, request *http.Request) {
-	fmt.Println("Witam na mojej stronie")
+	fmt.Println("Witam na mojej stronie", request.URL.Path)
+
 	//TODO zauważyłeś że komunikat się wyświetla w konsoli 2 razy? Nie wiesz dlaczego tak jest?
 	//TODO wyświetl na konsoli oprócz standardowego powitania wartość request.URL.Path.
 	//TODO żeby to zrobić, musisz najpierw użyć request.ParseForm()
@@ -71,6 +72,32 @@ func invalidLogin(response http.ResponseWriter, request *http.Request) {
 
 }
 
+func headerHandler(response http.ResponseWriter, request *http.Request) {
+	http.ServeFile(response, request, "templates/header.html")
+
+}
+
+func footerHandler(response http.ResponseWriter, request *http.Request) {
+	http.ServeFile(response, request, "templates/footer.html")
+
+}
+/*func internalHandler(response http.ResponseWriter, request *http.Request) {
+	//http.ServeFile(response, request, "templates/internal.html")
+
+} */
+func welcomeHandler(response http.ResponseWriter, request *http.Request) {
+	http.ServeFile(response, request, "templates/welcome.html")
+
+}
+func defaultHandler(response http.ResponseWriter, request *http.Request) {
+	http.ServeFile(response, request, "templates/default.html")
+
+}
+func logoutFormHandler(response http.ResponseWriter, request *http.Request) {
+	http.ServeFile(response, request, "templates/logoutForm.html")
+
+}
+
 
 func main() {
 	//TODO do każdego szablonu stworzonego w folderze /template stwórz HandleFunc() oraz metode,
@@ -79,12 +106,19 @@ func main() {
 	http.HandleFunc("/", witam)
 	http.HandleFunc("/logowanie", logowanie)
 	http.HandleFunc("/invalid_login", invalidLogin)
-	http.HandleFunc("/internal", internalHandler)
+	http.HandleFunc("/header", headerHandler)
+	http.HandleFunc("/footer", headerHandler)
+	http.HandleFunc("/default", headerHandler)
+	http.HandleFunc("/internal", headerHandler)
+	http.HandleFunc("/logoutForm", headerHandler)
+	http.HandleFunc("/welcome", headerHandler)
 	err := http.ListenAndServe("localhost:5555", nil)
 	if (err != nil) {
 		println(err)
 	}
 }
+
+
 
 // Na zrobienie zadań masz czas do czwartku do 20:30. W razie pytań pisz maila,
 // pamiętaj o stworzeniu brancha jeśli zamierzasz robić commit kodu, który się nie kompiluje
