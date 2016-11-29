@@ -48,7 +48,7 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 		//TODO jednej instrukcji if{} else{} W przykładzie poniżej drugi "if" pokazuje jak to zrobić"
 		//TODO Przykład: https://www.quora.com/What-is-the-difference-between-using-and-in-golang-IF-statements
 		//TODO Jeśli masz problemy z tym przykładem, napisz maila z pytaniem, to pomogę Ci to rozwiązać
-		if strings.EqualFold(login, correctLogin) {
+		/*if strings.EqualFold(login, correctLogin) {
 			if haslo == correctPassword {
 				http.Redirect(response, request, "/internal", 302)
 
@@ -65,8 +65,19 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 
 		}
 
+		*/
+
+		if login = correctLogin && haslo := correctPassword {
+			fmt.Println("Zalogowano")
+			http.Redirect(response, request, "/internal", 302)
+		} else {
+			fmt.Println("Hasło lub login są niepoprawne")
+			time.Sleep(2)
+			http.Redirect(response, request, "/invalid_login", 302)
+		}
 
 	}
+
 	fmt.Println("Witam na mojej stronie")
 	//fmt.Fprintf(wysylacz,"Witaj")
 	http.ServeFile(response, request, "logowanie.html")
