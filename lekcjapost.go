@@ -1,10 +1,5 @@
 package main
 
-import (
-	"net/http"
-	"fmt"
-)
-
 
 //TODO Stwórz nowy folder w katalogu projektu o nazwie /templates
 //TODO Dobrze, ale pliki w folderze templates nie są dodane do systemu kontroli wersji "GIT"
@@ -13,7 +8,6 @@ import (
 
 import (
 	"net/http"
-
 	"fmt"
 	"time"
 	"strings"
