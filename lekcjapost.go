@@ -13,12 +13,12 @@ import (
 
 import (
 	"net/http"
-
 	"fmt"
 	"time"
 	"strings"
 )
 var login string
+
 
 func witam(response http.ResponseWriter, request *http.Request) {
 	fmt.Println("Witam na mojej stronie", request.URL.Path)
@@ -113,6 +113,9 @@ func logoutFormHandler(response http.ResponseWriter, request *http.Request) {
 
 }
 
+func HandleFuncHandler(response http.ResponseWriter, request *http.Request) {
+
+}
 
 func main() {
 	//TODO do każdego szablonu stworzonego w folderze /template stwórz HandleFunc() oraz metode,
@@ -122,15 +125,17 @@ func main() {
 	http.HandleFunc("/logowanie", logowanie)
 	http.HandleFunc("/invalid_login", invalidLogin)
 	http.HandleFunc("/header", headerHandler)
-	http.HandleFunc("/footer", headerHandler) //TODO skopiowałeś nazwę funkcji headerHandler i zapomniałeś pozmieniać nazwy :)
-	http.HandleFunc("/default", headerHandler)
-	http.HandleFunc("/internal", headerHandler)
-	http.HandleFunc("/logoutForm", headerHandler)
-	http.HandleFunc("/welcome", headerHandler)
+	http.HandleFunc("/footer", footerHandler) //TODO skopiowałeś nazwę funkcji headerHandler i zapomniałeś pozmieniać nazwy :)
+	http.HandleFunc("/default", defaultHandler)
+	http.HandleFunc("/internal", internalHandler)
+	http.HandleFunc("/logoutForm", logoutFormHandler)
+	http.HandleFunc("/welcome", welcomeHandler)
+	http.HandleFunc("/", HandleFuncHandler)
 	err := http.ListenAndServe("localhost:5555", nil)
 	if (err != nil) {
 		println(err)
 	}
+
 }
 
 
