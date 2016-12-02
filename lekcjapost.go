@@ -73,9 +73,9 @@ func welcomeHandler(response http.ResponseWriter, request *http.Request) {
 		User string
 
 	}
-	data := Dane{Title:"Welcome"}
+	data := Dane{Title:"Witaj"}
 	//http.ServeFile(response, request, "templates/welcome.html")
-	t := template.Must(template.ParseFiles("templates/welcome.html"))
+	t,_ := template.ParseGlob("templates/*.html")
 	t.ExecuteTemplate(response, "welcome", data)
 
 }
