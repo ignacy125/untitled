@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"strings"
+	"html/template"
+
 )
 var login string
 
@@ -66,7 +68,15 @@ func footerHandler(response http.ResponseWriter, request *http.Request) {
 }
 
 func welcomeHandler(response http.ResponseWriter, request *http.Request) {
-	http.ServeFile(response, request, "templates/welcome.html")
+	type Dane struct{
+		Title string
+		User string
+
+	}
+	data := Dane{Title:"Welcome"}
+	//http.ServeFile(response, request, "templates/welcome.html")
+	t := template.Must(template.ParseFiles("templates/welcome.html"))
+	t.ExecuteTemplate(response, "welcome", data)
 
 }
 func defaultHandler(response http.ResponseWriter, request *http.Request) {
