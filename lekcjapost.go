@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"fmt"
 	"time"
+	//TODO nieużywana biblioteka, należy ją usunąć
 	"strings"
 )
 var login string
@@ -66,7 +67,7 @@ func logowanie(response http.ResponseWriter, request *http.Request) {
 		}
 
 		*/
-
+		//TODO o to chodziło, tylko pamiętaj że do porównywania używamy operatora "==" a nie "=" lub ":="
 		if login = correctLogin && haslo := correctPassword {
 			fmt.Println("Zalogowano")
 			http.Redirect(response, request, "/internal", 302)
