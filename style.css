@@ -1,0 +1,85 @@
+body, #map {
+width: 100%;
+margin: 0 0 0 0;
+ display: inline-block;
+    position: relative;
+}
+
+area:hover {
+cursor: pointer;
+
+}
+
+.country_container button {
+background-color: #00b33c;
+border: none;
+padding: 10px;
+transition: background-color 1s;
+outline: none;
+}
+
+.country_container button:hover {
+background-color: #00802b;
+}
+
+
+
+button {
+cursor: pointer;
+}
+
+.country_container .unit_amount_Alaska{
+position: absolute;
+position: absolute;
+top: 170px;
+left: 50px;
+color: white;
+font-size: 18px;
+padding: 2px;
+border: solid;
+display: none;
+}
+
+.ui-dialog .ui-dialog-title {
+  text-align: center;
+  width: 100%;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: center;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: none;
+}
+
+#Alaska_container {
+background-color: red;
+}
+
+#Alaska_container button {
+position: absolute;
+top: 150px;
+left: 50px;
+display: none;
+}
+
+#Alberta_container button{
+position: absolute;
+top: 240px;
+left: 190px;
+display: none;
+}
+
+#Ontario_container button {
+position: absolute;
+top: 260px;
+left: 290px;
+display: none;
+}
+
+#Greenland_container button {
+position: absolute;
+top: 88px;
+left: 500px;
+display: none;
+}
